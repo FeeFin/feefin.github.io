@@ -7,7 +7,7 @@
 
   <h2>CompareSameValue</h2>
   <ul>
-    <li>Q1. Does a conditional expression compare a field and a getter method that actually returns the same field?</li>
+    <li>Q1. Does a conditional expression compare a field with a getter method that actually returns the same field?</li>
     <li>Q2. Does the getter method have arguments?</li>
     <li>Q3. Is the field value updated in the getter method?</li>
     <li>Q4. Is the getter method overridden by other classes?</li>
@@ -40,7 +40,7 @@
   <h2>IncorrectMapIterator</h2>
   <ul>
     <li>Q1. Is a Map iterator initialized by calling Map.values()?</li>
-    <li>Q2. Is an object from the iterator casted with Map.Entry in a loop</li>
+    <li>Q2. Is an object from the iterator casted to Map.Entry in a loop</li>
   </ul>
   Detection Rule = (Q1: Yes, Q2: Yes)
 
@@ -71,7 +71,7 @@
   <ul>
     <li>Q1: Is the same object compared by using equals()?</li>
     <li>Q2: Is an equals() method call used in <i>if</i> statement or <i>for</i> block?</li>
-    <li>Q3: Is the same object comparison in a test method with @test annotation?</li>
+    <li>Q3: Does the conditional expression that compares the same objects by using equals() exist in a method defined with a <i>@test</i> annotation?</li>
     <li>Q4: Is equals() used in Assert or System.out.print()?</li>
   </ul>
   Detection Rule = (Q1: Yes, Q2: Yes, Q3: No, Q4: No)
