@@ -1,0 +1,89 @@
+<html>
+<head>
+  <title>FeeFin Patterns and Detection Rules</title>
+</head>
+<body>
+  <h1>FeeFin Patterns and Detection Rules</h1>
+
+  <h2>CompareSameValue</h2>
+  <ul>
+    <li>Q1. Does a conditional expression compare a field and a getter method that actually returns the same field?</li>
+    <li>Q2. Does the getter method have arguments?</li>
+    <li>Q3. Is the field value updated in the getter method?</li>
+    <li>Q4. Is the getter method overriden by other classses?</li>
+    <li>Q5. Is the getter method a default method in an interface?</li>
+  </ul>
+  Detection Rule = (Q1: Yes, Q2: No, Q3: No, Q4: No, Q5: No)
+
+  <h2>EqualToSameExpression</h2>
+  <ul>
+    <li>Q1. Does a conditional statement compare the same expressions using ‘==’?</li>
+    <li>Q2. Is x == x used for checking if x is NaN when its type is float or double?</li>
+    <li>Q3. Do developers intentionally make always true condition with the same number literals such as 1 == 1?</li>
+  </ul>
+  Detection Rule = (Q1: Yes, Q2: No, Q3: No)
+
+
+  <h2>IllogicalCondition</h2>
+  <ul>
+    <li>Q1. Is a conditional expression that check if an object is not null followed by ||?</li>
+    <li>Q2. Does an additional condition after || contain any mothod call of the object or a method call that uses the object as an argument?</li>
+  </ul>
+  Detection Rule = (Q1: Yes, Q2: Yes)
+
+  <h2>IncorrectDirectoySlash</h2>
+  <ul>
+    <li>Q1. Is there a String variable from args[x] and concatenated with a string value as an argument when initiating File class?</li>
+  </ul>
+  Detection Rule = (Q1: Yes)
+
+  <h2>IncorrectMapIterator</h2>
+  <ul>
+    <li>Q1. Is a Map iterator initialized by calling Map.values()?</li>
+    <li>Q2. Is an object from the iterator casted with Map.Entry in a loop</li>
+  </ul>
+  Detection Rule = (Q1: Yes, Q2: Yes)
+
+  <h2>MissingLForLong</h2>
+  <ul>
+    <li>Q1: Is a long type constant value computed with several integer values greater than the maximum value of the int type?</li>
+  </ul>
+  Detection Rule = (Q1: Yes)
+
+  <h2>RedundantException</h2>
+  <ul>
+    <li>Q1: Does a method declare to throw the same exception with a catch block in the method?</li>
+    <li>Q2: Are there at least two variables defined out of a try block used in a finally block of the method?</li>
+    <li>Q3: Are the variables initialized by method calls?</li>
+    <li>Q4: Are there at least two variables defined out of a try block used in a finally block of the method?</li>
+    <li>Q5: Are the variables primitive types?</li>
+    <li>Q6: Are the variables arrays?</li>
+  </ul>
+  Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes, Q4: Yes, Q5: No, Q6: No )
+
+  <h2>RedundantInstantiation</h2>
+  <ul>
+    <li>Q1: Is an object initialized and then instantiated without using it?</li>
+  </ul>
+  Detection Rule = (Q1: Yes)
+
+  <h2>SameObjEquals</h2>
+  <ul>
+    <li>Q1: Is the same object compared by using equals()?</li>
+    <li>Q2: Is an equals() method call used in <i>if</i> statement or <i>for</i> block?</li>
+    <li>Q3: Is the same object comparison in a test method with @test annotation?</li>
+    <li>Q4: Is equals() used in Assert or System.out.print()?</li>
+  </ul>
+  Detection Rule = (Q1: Yes, Q2: Yes, Q3: No, Q4: No)
+
+  <h2>WrongIncrementer</h2>
+  <ul>
+    <li>Q1: Are outer and innter loops based on size() or length() of arrays or collections?</li>
+    <li>Q2: Are there other outer loops of the outer loop or other inner loops of the inner loop?</li>
+    <li>Q3: Does the initialization of a <i>for</i> loop contain more than one loop control variables?</li>
+    <li>Q4: Is an array and collection same in both outer and inner loops?</li>
+  </ul>
+  Detection Rule = (Q1: Yes, Q2: No, Q3: No, Q4: No)<ul>
+
+</body>
+</html>
