@@ -10,7 +10,7 @@
     <li>Q1. Does a conditional expression compare a field and a getter method that actually returns the same field?</li>
     <li>Q2. Does the getter method have arguments?</li>
     <li>Q3. Is the field value updated in the getter method?</li>
-    <li>Q4. Is the getter method overriden by other classses?</li>
+    <li>Q4. Is the getter method overridden by other classes?</li>
     <li>Q5. Is the getter method a default method in an interface?</li>
   </ul>
   Detection Rule = (Q1: Yes, Q2: No, Q3: No, Q4: No, Q5: No)
@@ -27,7 +27,7 @@
   <h2>IllogicalCondition</h2>
   <ul>
     <li>Q1. Is a conditional expression that check if an object is not null followed by ||?</li>
-    <li>Q2. Does an additional condition after || contain any mothod call of the object or a method call that uses the object as an argument?</li>
+    <li>Q2. Does an additional condition after || contain any method call of the object or a method call that uses the object as an argument?</li>
   </ul>
   Detection Rule = (Q1: Yes, Q2: Yes)
 
@@ -78,7 +78,7 @@
 
   <h2>WrongIncrementer</h2>
   <ul>
-    <li>Q1: Are outer and innter loops based on size() or length() of arrays or collections?</li>
+    <li>Q1: Are outer and inner loops based on size() or length() of arrays or collections?</li>
     <li>Q2: Are there other outer loops of the outer loop or other inner loops of the inner loop?</li>
     <li>Q3: Does the initialization of a <i>for</i> loop contain more than one loop control variables?</li>
     <li>Q4: Is an array and collection same in both outer and inner loops?</li>
