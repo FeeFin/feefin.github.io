@@ -1,6 +1,17 @@
 <html>
 <head>
   <title>FeeFin Patterns and Detection Rules</title>
+  <style>
+  body {
+    width:800px
+  }
+  pre {
+    border: dashed gray;
+  }
+  h2 {
+    color: #003399;
+  }
+  </style>
 </head>
 <body>
   <h1>Designing Bug Detection Rules for Fewer False Alarms</h1>
@@ -8,6 +19,24 @@
   <h1>FeeFin Patterns and Detection Rules</h1>
 
   <h2>CompareSameValue</h2>
+  CompareSameValue compares the same values from a getter and a field.
+  <br><br>
+  The example always returns true as the getter, getVersion, actually returns the field, VERISON.
+  <pre>
+  <code>
+  public static final byte VERSION = 1;
+  public void readFields(DataInput in) throws IOException {
+   byte version = in.readByte();
+   ...
+- } else if (getVersion() == VERSION) {
++ } else if (getVersion() == version) {
+   ...
+  public byte getVersion() {
+    return VERSION;
+  }
+
+</code></pre>
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1. Does a conditional expression compare a field with a getter method that actually returns the same field?</li>
     <li>Q2. Does the getter method have arguments?</li>
@@ -17,7 +46,20 @@
   </ul>
   Detection Rule = (Q1: Yes, Q2: No, Q3: No, Q4: No, Q5: No)
 
+
+
   <h2>EqualToSameExpression</h2>
+  EqualToSameExpression compares the same expression with ’==’.
+  <br><br>
+  The example always returns true and a redundant part is removed in a fix.
+  <pre>
+  <code>
+- if(replicaInfo.getStamp() == replicaInfo.getStamp()) {
++ if(block.getStamp() == replicaInfo.getStamp()) {
+  </code>
+</pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1. Does a conditional statement compare the same expressions using ‘==’?</li>
     <li>Q2. Is x == x used for checking if x is NaN when its type is float or double?</li>
@@ -27,32 +69,113 @@
 
 
   <h2>IllogicalCondition</h2>
+  IllogicalCondition loads a known null object in conditional expressions that can cause a null pointer exception (NPE) because of an illogical condition.
+<br><br>
+  In the example, when the left operand of ‘||’ in the deleted line is false, prefix is null and will cause an NPE in the right operand. The ‘||’ is replaced into ‘&&’ in the added line of the patch for avoiding NPE when calling prefix.value().
+  <pre>
+  <code>
+- if(prefix != null || prefix.value()!=null)
++ if(prefix != null && prefix.value()!=null)</code>
+  </pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1. Is a conditional expression that check if an object is not null followed by ||?</li>
     <li>Q2. Does an additional condition after || contain any method call of the object or a method call that uses the object as an argument?</li>
   </ul>
   Detection Rule = (Q1: Yes, Q2: Yes)
 
+
+
+
+
   <h2>IncorrectDirectoySlash</h2>
+  IncorrectDirectorySlash causes an inconsistent path by an optional slash.
+  <br><br>
+  In the example, depending on whether args[1] is ended with a slash or not, mDir could have an inconsistent path. This is fixed by calling getAbsolutePath() that always returns a path not ending with a slash.
+  <pre>
+  <code>
+- File mDir = new File(args[1] + "-tmp");
++ File mDir = new File(args[1]);
++ mDir = new File(mDir.getAbsolutePath() + "-tmp");</code>
+  </pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1. Is there a String variable from args[x] and concatenated with a string value as an argument when initiating File class?</li>
   </ul>
   Detection Rule = (Q1: Yes)
 
+
+
+
+
   <h2>IncorrectMapIterator</h2>
+  IncorrectMapIterator is a wrong iteration of a map by values instead of an entry set.
+  <br><br>
+  In the example, developers incorrectly used values of a map to iterate the map.
+  <pre>
+  <code>
+  Map m = this.getMap();
+- for(Iterator i=m.values().iterator();i.hasNext();){
++ for (Iterator i=m.entrySet().iterator();i.hasNext();){ Map.Entry e = (Map.Entry) i.next();
+  String uri = (String) e.getKey();
+  </code>
+</pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1. Is a Map iterator initialized by calling Map.values()?</li>
     <li>Q2. Is an object from the iterator casted to Map.Entry in a loop</li>
   </ul>
   Detection Rule = (Q1: Yes, Q2: Yes)
 
+
+
+
+
   <h2>MissingLForLong</h2>
+  MissingLForLong causes an integer overflow while defining a long integer with the multiplication of actual values.
+  <br><br>
+  The example shows its fix by adding a suffix, L, for a long type on the largest value.
+  <pre>
+  <code>
+- final long DEFAULT_MAX_FILE_SIZE = 10*1024*1024*1024;
++ final long DEFAULT_MAX_FILE_SIZE = 10*1024*1024*1024L;</code>
+  </pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1: Is a long type constant value computed with several integer values greater than the maximum value of the int type?</li>
   </ul>
   Detection Rule = (Q1: Yes)
 
+
+
+
+
+
   <h2>RedundantException</h2>
+  RedundantException handles the same exception in both a try-catch-finally block and a method declaration with ‘throws’. This may miss intended catch or finally blocks.
+  <br><br>
+  In the example, the finally block is not executed when there is an IOException from initializing <i>os</i> or <i>is</i> before the try block as the method copy() throws the same exception. This bug leads to memory leak and is fixed by moving the statements causing IOException into the try block.
+  <pre>
+    <code>
+     public void copy() throws IOException {
+-    IndexOutput os = createOutput(dest);
+-    IndexInput is = openInput(src);
++    IndexOutput os = null;
++    IndexInput is = null;
+     try {
++      os = createOutput(dest);
++      is = openInput(src);
+       ...
+     } catch (IOException ioe) {
+       ...
+     } finally {
+       IOUtils.closeSafely(pExp, os, is);</code>
+  </pre>
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1: Does a method declare to throw the same exception with a catch block in the method?</li>
     <li>Q2: Are there at least two variables defined out of a try block used in a finally block of the method?</li>
@@ -63,13 +186,42 @@
   </ul>
   Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes, Q4: Yes, Q5: No, Q6: No )
 
+
+
+
+
   <h2>RedundantInstantiation</h2>
+  RedundantInstantiation initializes an object redundantly that can cause a performance issue.
+  <br><br>
+  The example shows redundant object instantiations of <tt>conn</tt>, one of which is removed in a patch.
+  <pre>
+    <code>
+- Connection conn = getConnection();
+- conn = new Connection(url,user);
++ Connection conn = new Connection(url,user);</code>
+  </pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1: Is an object initialized and then instantiated without using it?</li>
   </ul>
   Detection Rule = (Q1: Yes)
 
+
+
+
+
   <h2>SameObjEquals</h2>
+  SameObjEquals compares the same object, method, variable, etc., with <tt>equals()</tt>.
+  <br><br>
+  The comparison in the example always returns true and a redundant part is removed in a fix.
+  <pre>
+  <code>
+- return other.getUUID().equals(other.getUUID());
++ return getUUID().equals(other.getUUID());</code>
+  </pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1: Is the same object compared by using equals()?</li>
     <li>Q2: Is an equals() method call used in <i>if</i> statement or <i>for</i> block?</li>
@@ -78,7 +230,25 @@
   </ul>
   Detection Rule = (Q1: Yes, Q2: Yes, Q3: No, Q4: No)
 
+
+
+
+
   <h2>WrongIncrementer</h2>
+  WrongIncrementer is the misuse of an outer incrementer in an inner loop.
+  <br><br>
+In the example, developers incorrectly used the incrementer, <tt>i</tt>. If the sizes of <tt>a</tt>
+and <tt>b</tt> are not the same, there will be an index-out-of-bounds exception.
+
+  <pre>
+    <code>
+  for(int i=0; i < a.length; i++){
+    for(int j=0; j < b.length; j++){
+-     a[i] = b[i];
++     a[i] = b[j];</code>
+  </pre>
+
+  <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1: Are outer and/or inner loops based on size() or length() of arrays or collections?</li>
     <li>Q2: Are there other outer loops of the outer loop or other inner loops of the inner loop?</li>
