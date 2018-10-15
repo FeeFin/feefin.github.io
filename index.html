@@ -43,12 +43,12 @@
   <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1. Does a conditional expression compare a field with a getter method that actually returns the same field?</li>
-    <li>Q2. Does the getter method have arguments?</li>
-    <li>Q3. Is the field value updated in the getter method?</li>
-    <li>Q4. Is the getter method overridden by other classes?</li>
-    <li>Q5. Is the getter method a default method in an interface?</li>
+    <li>Q2. Does the getter method have no arguments?</li>
+    <li>Q3. Is the field value not updated in the getter method?</li>
+    <li>Q4. Is the getter method not overridden by other classes?</li>
+    <li>Q5. Is the getter method not a default method in an interface?</li>
   </ul>
-  Detection Rule = (Q1: Yes, Q2: No, Q3: No, Q4: No, Q5: No)
+  Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes, Q4: Yes, Q5: Yes)
 
 
 
