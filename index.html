@@ -66,10 +66,10 @@
   <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1. Does a conditional statement compare the same expressions using ‘==’?</li>
-    <li>Q2. Is x == x used for checking if x is NaN when its type is float or double?</li>
-    <li>Q3. Do developers intentionally make always true condition with the same number literals such as 1 == 1?</li>
+    <li>Q2. Is x == x not used for checking if x is NaN when its type is float or double?</li>
+    <li>Q3. Are developers not intentionally making always true condition with the same number literals such as 1 == 1?</li>
   </ul>
-  Detection Rule = (Q1: Yes, Q2: No, Q3: No)
+  Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes)
 
 
   <h2>IllogicalCondition</h2>
@@ -185,10 +185,10 @@
     <li>Q2: Are there at least two variables defined out of a try block used in a finally block of the method?</li>
     <li>Q3: Are the variables initialized by method calls?</li>
     <li>Q4: Are there at least two variables defined out of a try block used in a finally block of the method?</li>
-    <li>Q5: Are the variables primitive types?</li>
-    <li>Q6: Are the variables arrays?</li>
+    <li>Q5: Are the variables not primitive types?</li>
+    <li>Q6: Are the variables not arrays?</li>
   </ul>
-  Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes, Q4: Yes, Q5: No, Q6: No )
+  Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes, Q4: Yes, Q5: Yes, Q6: Yes )
 
 
 
@@ -229,10 +229,10 @@
   <ul>
     <li>Q1: Is the same object compared by using equals()?</li>
     <li>Q2: Is an equals() method call used in <i>if</i> statement or <i>for</i> block?</li>
-    <li>Q3: Does the conditional expression that compares the same objects by using equals() exist in a method defined with a <i>@test</i> annotation?</li>
-    <li>Q4: Is equals() used in Assert or System.out.print()?</li>
+    <li>Q3: Is the conditional expression that compares the same objects by using equals() not existing in a method defined with a <i>@test</i> annotation?</li>
+    <li>Q4: Is equals() not used in Assert or System.out.print()?</li>
   </ul>
-  Detection Rule = (Q1: Yes, Q2: Yes, Q3: No, Q4: No)
+  Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes, Q4: Yes)
 
 
 
@@ -255,11 +255,11 @@ and <tt>b</tt> are not the same, there will be an index-out-of-bounds exception.
   <h3>Detection Question and Rule</h3>
   <ul>
     <li>Q1: Are outer and/or inner loops based on size() or length() of arrays or collections?</li>
-    <li>Q2: Are there other outer loops of the outer loop or other inner loops of the inner loop?</li>
-    <li>Q3: Does the initialization of a <i>for</i> loop contain more than one loop control variables?</li>
-    <li>Q4: Is an array and collection same in both outer and inner loops?</li>
+    <li>Q2: Aren't there other outer loops of the outer loop or other inner loops of the inner loop?</li>
+    <li>Q3: Is the initialization of a <i>for</i> loop not containing more than one loop control variables?</li>
+    <li>Q4: Is an array and collection not same in both outer and inner loops?</li>
   </ul>
-  Detection Rule = (Q1: Yes, Q2: No, Q3: No, Q4: No)<ul>
+  Detection Rule = (Q1: Yes, Q2: Yes, Q3: Yes, Q4: Yes)<ul>
 
 </body>
 </html>
